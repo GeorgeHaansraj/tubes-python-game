@@ -1,4 +1,3 @@
-# turret.py
 import pygame as pg
 import math
 import constants as c
@@ -15,8 +14,8 @@ class Turret(pg.sprite.Sprite):
         self.last_shot = pg.time.get_ticks()
         self.selected = False
         self.target = None
-        self.health = 100
-        self.max_health = 100
+        self.health = 500
+        self.max_health = 500
 
         #position variables
         self.tile_x = tile_x

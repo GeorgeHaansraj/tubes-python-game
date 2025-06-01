@@ -1,135 +1,113 @@
-# enemy_data.py
 ENEMY_SPAWN_DATA = [
   {
-    #1
+    #level 1
     "weak": 15,
     "medium": 0,
-    "strong": 0,
-    "elite": 0
+    "strong": 0
   },
   {
-    #2
+    #level 2
     "weak": 30,
     "medium": 0,
-    "strong": 0,
-    "elite": 0
+    "strong": 0
   },
   {
-    #3
+    #level 3
     "weak": 20,
     "medium": 5,
-    "strong": 0,
-    "elite": 0
+    "strong": 0
   },
   {
-    #4
+    #level 4
     "weak": 30,
     "medium": 15,
-    "strong": 0,
-    "elite": 0
+    "strong": 0
   },
   {
-    #5
+    #level 5
     "weak": 5,
     "medium": 20,
-    "strong": 0,
-    "elite": 0
+    "strong": 0
   },
   {
-    #6
+    #level 6
     "weak": 15,
     "medium": 15,
-    "strong": 4,
-    "elite": 0
+    "strong": 4
   },
   {
-    #7
+    #level 7
     "weak": 20,
     "medium": 25,
-    "strong": 5,
-    "elite": 0
+    "strong": 5
   },
   {
-    #8
+    #level 8
     "weak": 10,
     "medium": 20,
-    "strong": 15,
-    "elite": 0
+    "strong": 15
   },
   {
-    #9
+    #level 9
     "weak": 15,
     "medium": 10,
-    "strong": 5,
-    "elite": 0
+    "strong": 5
   },
   {
-    #10
+    #level 10
     "weak": 0,
     "medium": 100,
-    "strong": 0,
-    "elite": 0
+    "strong": 0
   },
   {
-    #11
+    #level 11
     "weak": 5,
     "medium": 10,
-    "strong": 12,
-    "elite": 2
+    "strong": 12
   },
   {
-    #12
+    #level 12
     "weak": 0,
     "medium": 15,
-    "strong": 10,
-    "elite": 5
+    "strong": 10
   },
   {
-    #13
+    #level 13
     "weak": 20,
     "medium": 0,
-    "strong": 25,
-    "elite": 10
+    "strong": 25
   },
   {
-    #14
+    #level 14
     "weak": 15,
     "medium": 15,
-    "strong": 15,
-    "elite": 15
+    "strong": 15
   },
   {
-    #15
+    #level 15
     "weak": 25,
     "medium": 25,
-    "strong": 25,
-    "elite": 25
+    "strong": 25
   }
 ]
 
 ENEMY_DATA = {
     "weak": {
-    "health": 100,
+    "health": 150,
     "speed": 2,
-    "damage": 5,
-    "attack_cooldown": 1000 # Contoh: serang setiap 1 detik
+    "damage": 8,
+    "attack_cooldown": 1000 #serang setiap 1 detik
   },
     "medium": {
-    "health": 150,
+    "health": 180,
     "speed": 3,
-    "damage": 8,
-    "attack_cooldown": 1200 # Contoh: serang setiap 1.2 detik
+    "damage": 15,
+    "attack_cooldown": 1200 #serang setiap 1.2 detik
   },
     "strong": {
     "health": 200,
     "speed": 4,
-    "damage": 10,
-    "attack_cooldown": 1500 # Contoh: serang setiap 1.5 detik
-  },
-    "elite": {
-    "health": 300,
-    "speed": 6,
-    "damage": 15,
-    "attack_cooldown": 800 # Contoh: serang setiap 0.8 detik
+    "damage": 20,
+    "attack_cooldown": 2000 #serang setiap 2 detik
   }
 }

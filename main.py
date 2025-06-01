@@ -1,4 +1,3 @@
-# main.py
 import pygame as pg
 import json
 from enemy import Enemy
@@ -7,64 +6,61 @@ from turret import Turret
 from button import Button
 import constants as c
 
-#initialise pygame
+#inisialisasi pygame
 pg.init()
 
-#create clock
+#membuat waktu
 clock = pg.time.Clock()
 
-#create game window
+#membuat game window
 screen = pg.display.set_mode((c.SCREEN_WIDTH + c.SIDE_PANEL, c.SCREEN_HEIGHT))
 pg.display.set_caption("Tower Defence")
 
 #game variables
 game_over = False
-game_outcome = 0# -1 is loss & 1 is win
+game_outcome = 0 #(-1 == loss | 1 == win)
 level_started = False
 last_enemy_spawn = pg.time.get_ticks()
 placing_turrets = False
 selected_turret = None
 
 #load images
+
 #map
-map_image = pg.image.load('levels/level.png').convert_alpha()
+map_image = pg.image.load('levels/level.png').convert()
+
 #turret spritesheets
 turret_spritesheets = []
-for level_num in range(1, c.TURRET_LEVELS + 1): # Loop untuk setiap level turret (1, 2, 3)
+for level_num in range(1, c.TURRET_LEVELS + 1):
     level_frames = []
-    for frame_num in range(1, c.TURRET_FRAMES + 1): # Loop untuk setiap frame (1 sampai 9)
-        # Konstruksi jalur file yang benar: assets/images/turrets/turret_X/t_Y (Y).png
+    for frame_num in range(1, c.TURRET_FRAMES + 1):
         img_path = f'assets/images/turrets/turret_{level_num}/t_1 ({frame_num}).png'
         try:
             img = pg.image.load(img_path).convert_alpha()
             level_frames.append(img)
         except pg.error as e:
             print(f"Error loading image {img_path}: {e}")
-    if level_frames: # Hanya tambahkan jika frame berhasil dimuat
+    if level_frames:
         turret_spritesheets.append(level_frames)
     else:
         print(f"Warning: No frames loaded for turret level {level_num}. Check image paths.")
-
-#individual turret image for mouse cursor
-# Ambil frame pertama dari turret level 1 sebagai gambar kursor
+#cursor turret = frame 1 dari turret_1
 cursor_turret = None
 if turret_spritesheets and turret_spritesheets[0]:
-    cursor_turret = turret_spritesheets[0][0] # Ambil frame pertama dari turret level 1
+    cursor_turret = turret_spritesheets[0][0]
 else:
-    # Fallback jika tidak ada gambar turret yang dimuat
+    #kalau tidak bisa load frame 1 dari tureet_1
     print("Warning: Could not load cursor_turret image. Check turret image paths.")
-    cursor_turret = pg.Surface((c.TILE_SIZE, c.TILE_SIZE), pg.SRCALPHA) # Buat permukaan kosong
-    pg.draw.rect(cursor_turret, (255, 255, 0), cursor_turret.get_rect(), 2) # Gambar persegi panjang kuning sebagai placeholder
+    cursor_turret = pg.Surface((c.TILE_SIZE, c.TILE_SIZE), pg.SRCALPHA)
+    pg.draw.rect(cursor_turret, (255, 255, 0), cursor_turret.get_rect(), 2)
+
 #enemies
 enemy_images = {
   "weak": { "walking": [], "dying": [], "slashing": [] },
   "medium": { "walking": [], "dying": [], "slashing": [] },
   "strong": { "walking": [], "dying": [], "slashing": [] }
 }
-
-# Define a helper function to load animations for each enemy type
 def load_enemy_animations(enemy_type_key, folder_prefix, num_walking_frames, num_dying_frames, num_slashing_frames):
-    # Determine the numerical prefix for the image files
     file_prefix_num = ""
     if enemy_type_key == "weak":
         file_prefix_num = "1"
@@ -72,7 +68,6 @@ def load_enemy_animations(enemy_type_key, folder_prefix, num_walking_frames, num
         file_prefix_num = "2"
     elif enemy_type_key == "strong":
         file_prefix_num = "3"
-
     for i in range(num_walking_frames):
         img = pg.image.load(f'assets/images/enemies/{folder_prefix}/Walking/{file_prefix_num}_Zombie_Villager_Walking_{i}.png').convert_alpha()
         enemy_images[enemy_type_key]["walking"].append(img)
@@ -82,13 +77,9 @@ def load_enemy_animations(enemy_type_key, folder_prefix, num_walking_frames, num
     for i in range(num_slashing_frames):
         img = pg.image.load(f'assets/images/enemies/{folder_prefix}/Slashing/{file_prefix_num}_Zombie_Villager_Slashing_{i}.png').convert_alpha()
         enemy_images[enemy_type_key]["slashing"].append(img)
-
-# Load animations for each enemy type with their specific frame counts
-# YOU MUST CHANGE THESE TO YOUR ACTUAL FRAME COUNTS IF THEY ARE DIFFERENT
 load_enemy_animations("weak", "enemy_1", 24, 10, 8)
 load_enemy_animations("medium", "enemy_2", 24, 12, 10)
 load_enemy_animations("strong", "enemy_3", 24, 15, 12)
-
 
 #buttons
 buy_turret_image = pg.image.load('assets/images/buttons/buy_turret.png').convert_alpha()
@@ -97,6 +88,7 @@ upgrade_turret_image = pg.image.load('assets/images/buttons/upgrade_turret.png')
 begin_image = pg.image.load('assets/images/buttons/begin.png').convert_alpha()
 restart_image = pg.image.load('assets/images/buttons/restart.png').convert_alpha()
 fast_forward_image = pg.image.load('assets/images/buttons/fast_forward.png').convert_alpha()
+
 #gui
 heart_image = pg.image.load("assets/images/gui/heart.png").convert_alpha()
 coin_image = pg.image.load("assets/images/gui/coin.png").convert_alpha()
@@ -106,11 +98,12 @@ logo_image = pg.image.load("assets/images/gui/logo.png").convert_alpha()
 shot_fx = pg.mixer.Sound('assets/audio/shot.wav')
 shot_fx.set_volume(0.5)
 
-#load json data for level
-with open('levels/level.tmj') as file:
-  world_data = json.load(file)
+#load json data untuk map/level game
+file = open('levels/level.tmj')
+world_data = json.load(file)
+file.close()
 
-#load fonts for displaying text on the screen
+#load fonts tampilan teks di layar
 text_font = pg.font.SysFont("Consolas", 24, bold = True)
 large_font = pg.font.SysFont("Consolas", 36)
 
@@ -121,7 +114,7 @@ def draw_text(text, font, text_col, x, y):
 
 def display_data():
   #draw panel
-  pg.draw.rect(screen, "maroon", (c.SCREEN_WIDTH, 0, c.SIDE_PANEL, c.SCREEN_HEIGHT))
+  pg.draw.rect(screen, "dark green", (c.SCREEN_WIDTH, 0, c.SIDE_PANEL, c.SCREEN_HEIGHT))
   pg.draw.rect(screen, "grey0", (c.SCREEN_WIDTH, 0, c.SIDE_PANEL, 400), 2)
   screen.blit(logo_image, (c.SCREEN_WIDTH, 400))
   #display data
